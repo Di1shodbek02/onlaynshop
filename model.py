@@ -34,6 +34,37 @@ class User(DB):
             obj = User(*user_id)
             return obj
 
+    def delete_account(self, account):
+        query = f" delete from Users where email =  ? "
+        param = (account,)  # noqa
+        self.cur.execute(query, param)
+        self.con.commit()
+
+    def change_name(self, new_name):  # noqa
+        query = f" update Users set full_name = ? where email = ? "
+        params = (new_name, self.email)
+        self.cur.execute(query, params)
+        self.con.commit()
+
+    def change_username(self, new_username):  # noqa
+        query = f" update Users set full_name = ? where email = ? "
+        params = (new_username, self.email)
+        self.cur.execute(query, params)
+        self.con.commit()
+
+    def change_password(self, new):
+        query = f" update Users set paassword = ? where email = ? "
+        params = (new, self.email)
+        self.cur.execute(query, params)
+        self.con.commit()
+
+    def delete_account1(self):
+        query = f" delete from Users where email =  ? "
+        param = (self.email,)  # noqa
+        self.cur.execute(query, param)
+        self.con.commit()
+
+
 
 @dataclass
 class Car(DB):
@@ -72,12 +103,12 @@ class Car(DB):
 
 
 @dataclass
-class User(DB):
+class Company(DB):
     name: str = None
 
-    def campany_name(self):
-        query = """select name from users where name = ?"""
-        parametr = (self.name,)
-        self.cur.execute(query, parametr)
+    def company_name(self):
+        query = """select name from Users where full_name = ?"""
+        param = (self.name,)
+        self.cur.execute(query, param)
         if self.cur.fetchone():
             return True
