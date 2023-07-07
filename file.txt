@@ -1,0 +1,24 @@
+from dataclasses import dataclass
+
+from db import DB
+@dataclass
+class User(DB):
+    name : str = None
+
+
+    def campany_name(self):
+        query = """select name from users where name = ?"""
+        parametr = (self.name,)
+        self.cur.execute(query , parametr)
+        if self.cur.fetchone():
+            return True
+
+def query_company():
+    table = {
+        "campany_name": input("name"),
+    }
+    model = User (**table)
+
+    if model.campany_name():
+        print( " The account already exsists !" )
+    return
