@@ -1,6 +1,104 @@
 from tabulate import tabulate
-from model import User, Company
+from model import User
+from model import Company
 from model import Car
+
+
+class Basic:
+    def __init__(self, session):
+        self.session_user = session
+
+    def settings(self):
+        menu = """
+        1) change info
+        2) delete account
+        3) <- back
+        """
+        key = int(input(menu))
+        match key:
+            case 1:
+                menu_col = """
+                    1) name
+                    2) username
+                    3) password
+                    4) <- back
+                        >>>"""
+                key = int(input(menu_col))
+                if key != 4:
+                    new_val = input("New value: ")
+                match key:
+                    case 1:
+                        self.session_user.change_info("full_name", new_val)
+                    case 2:
+                        self.session_user.change_info("email", new_val)
+                    case 3:
+                        self.session_user.change_info("password", new_val)
+                    case 4:
+                        self.settings()
+                self.settings()
+
+            case 2:
+                if self.session_user.role == "ADMIN":
+                    AdminUI(self.session_user).admin_menu()
+                else:
+                    CustomerUI(self.session_user).customer_menu()
+
+
+class CustomerUI(Basic):
+    def __init__(self, session):
+        super().__init__(session)
+
+    def customer_menu(self):
+        pass
+
+
+class CompanyUI(Basic):
+    def __init__(self, session):
+        super().__init__(session)
+
+    def company_menu(self):
+        pass
+
+    def add_company(self):
+        pass
+
+    def delete_company(self):
+        pass
+
+    def show_company(self):
+        pass
+
+
+class AdminUI(Basic):
+    def __init__(self, session):
+        super().__init__(session)
+
+    def admin_menu(self):
+        text = """
+            1) Company
+            2) settings
+            3) <- back
+        """
+        key = int(input(text))
+        match key:
+            case 1:
+
+                text = """
+                    1) add company
+                    
+                    2) <- back
+                """
+                key = int(input(text))
+                match key:
+                    case 1:
+                        pass
+                    case 2:
+                        self.admin_menu()
+
+            case 2:
+                self.settings()
+            case 3:
+                UI()
 
 
 def register():
@@ -25,85 +123,13 @@ def login():
     obj = User(**d)
     session_user = obj.login_check()
     if not session_user:
-        print("Wrong username or password !")
+        print("Wrong email or password !")
         return
     print(f"Welcome {session_user.full_name}")
     if session_user.role == "ADMIN":
-        admin_menu()
+        AdminUI(session_user).admin_menu()
     else:
-        customer_menu()
-
-
-def admin_menu():
-    text = """
-        1) Company
-        2) Cars
-        3) settings
-        4) <- back
-        >>>>  """
-    key = int(input(text))
-    match key:
-        case 1:
-            pass
-        case 2:
-            crud_menu = """
-                1) add car
-                2) delete car
-                3) update car
-                4) show car
-                5) <-back
-                Select number >>>"""
-            key = int(input(crud_menu))
-            match key:
-                case 1:
-                    name = input("Enter name of car: ")
-                    response = Car(name=name).add()
-                    if not response:
-                        print("There is this car in our collection!!!")
-                    else:
-                        print("Success add!")
-                    admin_menu()
-                case 2:
-                    datas = Car().show()
-                    print(tabulate(datas, tablefmt="simple_grid"))
-                    Id_key = int(input("Id: "))
-                    Car(id=Id_key).delete()
-                    print("Successfully delete!")
-                    admin_menu()
-                case 3:
-                    datas = Car().show()
-                    print(tabulate(datas, tablefmt="simple_grid"))
-                    d = {
-                        "Id_key": int(input("Id: ")),
-                        "new_name": input("New name: ")
-                    }
-                    Car(**d).update()
-                    print("Success update!!")
-                    admin_menu()
-                case 4:
-                    datas = Car().show()
-                    print(tabulate(datas, tablefmt="simple_grid"))
-                    admin_menu()
-                case 5:
-                    UI()
-        case 3:
-            pass
-        case 4:
-            UI()
-
-# def query_company():
-#     table = {
-#         "company_name": input("name"),
-#     }
-#     model = Company(**table)
-#
-#     if model.company_name():
-#         print(" The account already exists !")
-#     return
-
-
-def customer_menu():
-    pass
+        CustomerUI(session_user).customer_menu()
 
 
 def UI():
@@ -121,7 +147,6 @@ def UI():
                 login()
             case 3:
                 break
-
 
 
 UI()

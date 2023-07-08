@@ -6,19 +6,164 @@ class User(DB):
     name : str = None
 
 
-    def campany_name(self):
-        query = """select name from users where name = ?"""
-        parametr = (self.name,)
-        self.cur.execute(query , parametr)
+    def company_name(self):
+        query = """select name from Company where name = ?"""
+        param = (self.name,)
+        self.cur.execute(query , param)
         if self.cur.fetchone():
             return True
 
+
+
 def query_company():
     table = {
-        "campany_name": input("name"),
+        "company_name": input("name "),
     }
     model = User (**table)
 
-    if model.campany_name():
-        print( " The account already exsists !" )
+    if model.company_name():
+        print( " The account already exists !" )
     return
+
+
+
+
+
+
+
+
+
+
+
+
+
+    name = input("Enter name of car: ")
+                    response = Car(name=name).add()
+                    if not response:
+                        print("There is this car in our collection!!!")
+                    else:
+                        print("Success add!")
+
+
+
+
+
+
+
+                        datas = Car().show()
+                    print(tabulate(datas, tablefmt="simple_grid"))
+                    Id_key = int(input("Id: "))
+                    Car(id=Id_key).delete()
+                    print("Successfully delete!")
+
+
+
+     datas = Car().show()
+                    print(tabulate(datas, tablefmt="simple_grid"))
+                    d = {
+                        "Id_key": int(input("Id: ")),
+                        "new_name": input("New name: ")
+                    }
+                    Car(**d).update()
+                    print("Success update!!")
+
+
+
+
+                    datas = Car().show()
+                    print(tabulate(datas, tablefmt="simple_grid"))
+
+
+
+
+
+
+
+
+
+                        crud_menu = """
+                1) add car
+                2) delete car
+                3) update car
+                4) show car
+                5) <-back
+                Select number >>>"""
+            key = int(input(crud_menu))
+            match key:
+                case 1:
+                    pass
+                case 2:
+                    pass
+
+                case 3:
+                  pass
+                case 4:
+                    pass
+
+                case 5:
+                    admin_menu()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    # def admin_menu():
+#     text = """
+#         1) Company
+#         2) settings
+#         3) <- back
+#         >>>>  """
+#     key = int(input(text))
+#     match key:
+#         case 1:
+#             # crud_menu = """
+#             #     1) add car
+#             #     2) delete car
+#             #     3) update car
+#             #     4) show car
+#             #     5) <-back
+#             #     Select number >>>"""
+#             # key = int(input(crud_menu))
+#             # match key:
+#             #     case 1:
+#             #         pass
+#             #     case 2:
+#             #         pass
+#             #
+#             #     case 3:
+#             #         pass
+#             #     case 4:
+#             #         pass
+#             #
+#             #     case 5:
+#             #         admin_menu()
+#             pass
+#         case 2:
+#             pass
+#         case 3:
+#             UI()
+
+
+# def query_company():
+#     table = {
+#         "company_name": input("name"),
+#     }
+#     model = Company(**table)
+#
+#     if model.company_name():
+#         print(" The account already exists !")
+#     return

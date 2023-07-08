@@ -39,9 +39,7 @@ class DB:
         );
     """
 
-
     cur.execute(query_user)
     cur.execute(query_company)
     cur.execute(query_car)
     con.commit()
-

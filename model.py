@@ -64,6 +64,14 @@ class User(DB):
         self.cur.execute(query, param)
         self.con.commit()
 
+    def change_info(self, col_name, val):
+        query = f"""
+            update Users set {col_name} = ? where id = ?
+            """
+        params = (val, self.id)
+        self.cur.execute(query, params)
+        self.con.commit()
+
 
 
 @dataclass
@@ -107,7 +115,7 @@ class Company(DB):
     name: str = None
 
     def company_name(self):
-        query = """select name from Users where full_name = ?"""
+        query = """select name from Company where name = ?"""
         param = (self.name,)
         self.cur.execute(query, param)
         if self.cur.fetchone():
