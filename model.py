@@ -73,7 +73,6 @@ class User(DB):
         self.con.commit()
 
 
-
 @dataclass
 class Car(DB):
     id: int = None
@@ -112,11 +111,30 @@ class Car(DB):
 
 @dataclass
 class Company(DB):
-    name: str = None
+    id: int = None
+    Company_name: str = None
+    created_at: str = None
 
-    def company_name(self):
-        query = """select name from Company where name = ?"""
-        param = (self.name,)
-        self.cur.execute(query, param)
-        if self.cur.fetchone():
-            return True
+    def add(self):
+        query = """select id from Company where company_name=?"""
+        self.cur.execute(query, (self.company_name,))
+        if self.cur:
+            return False
+        query = """insert into Company (company_name) values (?)"""
+        self.cur.execute(query, (self.company_name,))
+        return True
+
+    def delete(self):
+        query = """delete from Company where id=?"""
+        self.cur.execute(query, (self.id))
+        self.con.commit()
+
+    def update(self):
+        query = """update Company set company_name=? where id=?"""
+        self.cur.execute(query, (self.company_name, self, id))
+        self.con.commit()
+
+    def show(self):
+        query = """ select * from Company;"""
+        self.cur.execute(query)
+        return self.cur.fetchall()
