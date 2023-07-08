@@ -41,7 +41,7 @@ class Basic:
                 if self.session_user.role == "ADMIN":
                     AdminUI(self.session_user).admin_menu()
                 else:
-                    CustomerUI(self.session_user).customer_menu()
+                    CustomerUI(self.session_user).customer_menu()  # ✅
 
 
 class CustomerUI(Basic):
@@ -52,21 +52,94 @@ class CustomerUI(Basic):
         pass
 
 
+class CarUI(Basic):
+    def __init__(self, session):
+        super().__init__(session)
+
+    def crud_menu(self):
+
+        text = """
+                  1) add car
+                  2) delete car
+                  3) update car
+                  4) show car
+                  5) <-back
+                  Select number >>>"""
+        key = int(input(text))
+
+        match key:
+            case 1:
+                name = input("Enter name of car: ")
+                response = Car(name=name).add()
+                if not response:
+                    print("There is this car in our collection!!!")
+                else:
+                    print("Success add!")
+            case 2:
+                data = Car().show()
+                print(tabulate(data, tablefmt="simple_grid"))
+                Id_key = int(input("Id: "))
+                Car(id=Id_key).delete()
+                print("Successfully delete!")
+
+            case 3:
+                data = Car().show()
+                print(tabulate(data, tablefmt="simple_grid"))
+                d = {
+                    "Id_key": int(input("Id: ")),
+                    "new_name": input("New name: ")
+                }
+                Car(**d).update()
+                print("Success update!!")
+            case 4:
+                data = Car().show()
+                print(tabulate(data, tablefmt="simple_grid"))
+
+            case 5:
+                CompanyUI(self.session_user).company_crud()
+
+
 class CompanyUI(Basic):
     def __init__(self, session):
         super().__init__(session)
 
-    def company_menu(self):
-        pass
-
-    def add_company(self):
-        pass
-
-    def delete_company(self):
-        pass
-
-    def show_company(self):
-        pass
+    def company_crud(self):
+        text = """
+           1) add company
+           2) delete company
+           3) update company
+           4) show company
+           5) <-back
+        """
+        key = int(input(text))
+        match key:
+            case 1:
+                name = input("Enter name of car: ")
+                response = Company(name=name).add()
+                if not response:
+                    print("There is this company in our collection!!!")
+                else:
+                    print("Success add!")
+            case 2:
+                data = Company().show()
+                print(tabulate(data, tablefmt="simple_grid"))
+                Id_key = int(input("Id: "))
+                Company(id=Id_key).delete()
+                print("Successfully delete!")
+            case 3:
+                data = Company().show()
+                print(tabulate(data, tablefmt="simple_grid"))
+                d = {
+                    "Id_key": int(input("Id: ")),
+                    "new_name": input("New name: ")
+                }
+                Company(**d).update()
+                print("Success update!!")
+            case 4:
+                data = Company().show()
+                print(tabulate(data, tablefmt="simple_grid"))
+            case 5:
+                AdminUI(self.session_user).admin_menu()
 
 
 class AdminUI(Basic):
@@ -82,19 +155,7 @@ class AdminUI(Basic):
         key = int(input(text))
         match key:
             case 1:
-
-                text = """
-                    1) add company
-                    
-                    2) <- back
-                """
-                key = int(input(text))
-                match key:
-                    case 1:
-                        pass
-                    case 2:
-                        self.admin_menu()
-
+                pass
             case 2:
                 self.settings()
             case 3:

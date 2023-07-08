@@ -21,7 +21,7 @@ class DB:
     query_company = """
         create table if not exists Company(
         id integer primary key autoincrement,
-        company_name varchar(255),
+        name vaarchar(255),
         created_at date default current_date
         );
     """
