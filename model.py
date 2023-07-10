@@ -100,41 +100,51 @@ class Car(DB):
 
     def update(self):
         query = """update Car set name=? where id=?"""
-        self.cur.execute(query(self.name, self.id))
+        self.cur.execute(query(self.name, self.id, ))
         self.con.commit()
 
     def show(self):
-        query = """select * from Car;"""
+        query = """select * from Car"""
         self.cur.execute(query)
         return self.cur.fetchall()
+
+    def cars(self, company_id):
+        query = """select * from Car where company_id = ?"""
+        param = (company_id,)
+        self.cur.execute(query, param)
+        data = self.cur.fetchall()
+        self.con.commit()
+        return data
+
 
 
 @dataclass
 class Company(DB):
     id: int = None
-    Company_name: str = None
+    company_name: str = None
     created_at: str = None
 
     def add(self):
         query = """select id from Company where company_name=?"""
         self.cur.execute(query, (self.company_name,))
-        if self.cur:
+        if self.cur.fetchall():
             return False
         query = """insert into Company (company_name) values (?)"""
         self.cur.execute(query, (self.company_name,))
+        self.con.commit()
         return True
 
     def delete(self):
         query = """delete from Company where id=?"""
-        self.cur.execute(query, (self.id))
+        self.cur.execute(query, (self.id,))
         self.con.commit()
 
     def update(self):
         query = """update Company set company_name=? where id=?"""
-        self.cur.execute(query, (self.company_name, self, id))
+        self.cur.execute(query, (self.company_name, self.id,))
         self.con.commit()
 
     def show(self):
-        query = """ select * from Company;"""
+        query = """ select * from Company"""
         self.cur.execute(query)
         return self.cur.fetchall()

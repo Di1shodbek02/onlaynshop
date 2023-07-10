@@ -66,9 +66,22 @@ class CarUI(Basic):
                   5) <-back
                   Select number >>>"""
         key = int(input(text))
-
+        data = Company().show()
+        print(tabulate(data, tablefmt="simple_grid"))
         match key:
             case 1:
+                comp_id = int(input("Select comp id:"))
+                d = {
+                    'name': input("Name: "),
+                    'year': int(input('Year: ')),
+                    'color': input('Color: '),
+                    'price': int(input('Price: ')),
+                    'praberg': int(input('Praberg: '))
+
+                }
+                data = Car(**d)
+                data.cars(comp_id)
+                print(tabulate(data, tablefmt="simple_grid"))
                 name = input("Enter name of car: ")
                 response = Car(name=name).add()
                 if not response:
@@ -97,6 +110,7 @@ class CarUI(Basic):
 
             case 5:
                 CompanyUI(self.session_user).company_crud()
+        self.car_crud()
 
 
 class CompanyUI(Basic):
@@ -114,8 +128,8 @@ class CompanyUI(Basic):
         key = int(input(text))
         match key:
             case 1:
-                name = input("Enter name of car: ")
-                response = Company(name=name).add()
+                name = input("Enter name of company: ")
+                response = Company(company_name=name).add()
                 if not response:
                     print("There is this company in our collection!!!")
                 else:
@@ -140,6 +154,7 @@ class CompanyUI(Basic):
                 print(tabulate(data, tablefmt="simple_grid"))
             case 5:
                 AdminUI(self.session_user).admin_menu()
+        self.company_crud()
 
 
 class AdminUI(Basic):
@@ -149,8 +164,8 @@ class AdminUI(Basic):
     def admin_menu(self):
         text = """
             1) Company
-            2) settings
-            3) Cars
+            2) Cars
+            3) settings
             4) <- back
         """
         key = int(input(text))
