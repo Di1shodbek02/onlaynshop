@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+
+import bcrypt
+
 from db import DB
 
 
@@ -21,18 +24,19 @@ class User(DB):
     def save_user(self):
         query = """insert into Users(full_name, email, password)
         values (?, ?, ?)"""
-        parametrs = (self.full_name, self.email, self.password)
+        parametrs = (self.full_name, self.email, bcrypt.hashpw(self.password.encode('utf-8'), bcrypt.gensalt()))
         self.cur.execute(query, parametrs)
         self.con.commit()
 
     def login_check(self):
-        query = """select * from Users where email = ? and password = ?"""
-        parametrs = (self.email, self.password,)
+        query = """select * from Users where email = ?"""
+        parametrs = (self.email,)
         self.cur.execute(query, parametrs)
         user_id = self.cur.fetchone()
-        if user_id:
-            obj = User(*user_id)
-            return obj
+        return user_id
+
+            # obj = User(*user_id)
+            # return obj
 
     def delete_account(self, account):
         query = f" delete from Users where email =  ? "
@@ -84,13 +88,13 @@ class Car(DB):
     praberg: int = None  # noqa
     created_at: str = None
 
-    def add(self):
-        query = """select id from Car where name=?"""
+    def add(self, name, year, color, price, praberg):
+        query = """select * from Car where name=?"""
         self.cur.execute(query, (self.name,))
         if self.cur:
             return False
-        query = """insert into Car (name) values (?)"""
-        self.cur.execute(query(self.name, ))
+        query = """insert into Car (name, year, color, price, praberg) values (?, ?, ?, ?, ?)"""
+        self.cur.execute(query(name, year, color, price, praberg,))
         return True
 
     def delete(self):

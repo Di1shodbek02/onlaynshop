@@ -1,3 +1,4 @@
+import bcrypt
 from tabulate import tabulate
 from model import User
 from model import Company
@@ -89,6 +90,9 @@ class CarUI(Basic):
                 else:
                     print("Success add!")
             case 2:
+                comp_id = int(input("Select comp id:"))
+                data = Car()
+                data.cars(comp_id)
                 data = Car().show()
                 print(tabulate(data, tablefmt="simple_grid"))
                 Id_key = int(input("Id: "))
@@ -96,6 +100,9 @@ class CarUI(Basic):
                 print("Successfully delete!")
 
             case 3:
+                comp_id = int(input("Select comp id:"))
+                data = Car()
+                data.cars(comp_id)
                 data = Car().show()
                 print(tabulate(data, tablefmt="simple_grid"))
                 d = {
@@ -105,6 +112,9 @@ class CarUI(Basic):
                 Car(**d).update()
                 print("Success update!!")
             case 4:
+                comp_id = int(input("Select comp id:"))
+                data = Car()
+                data.cars(comp_id)
                 data = Car().show()
                 print(tabulate(data, tablefmt="simple_grid"))
 
@@ -200,12 +210,15 @@ def login():
         "password": input("Password:"),
     }
     obj = User(**d)
-    session_user = obj.login_check()
-    if not session_user:
+    session_user = list(obj.login_check())
+    new_post = d["password"]
+    bytes_pass = new_post.encode('utf-8')
+    if_true = bcrypt.checkpw(bytes_pass, session_user[3])
+    if not if_true:
         print("Wrong email or password !")
         return
-    print(f"Welcome {session_user.full_name}")
-    if session_user.role == "ADMIN":
+    # print(f"Welcome {session_user.full_name}")
+    if session_user[4] == "ADMIN":
         AdminUI(session_user).admin_menu()
     else:
         CustomerUI(session_user).customer_menu()
