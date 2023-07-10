@@ -117,7 +117,6 @@ class Car(DB):
         return data
 
 
-
 @dataclass
 class Company(DB):
     id: int = None
