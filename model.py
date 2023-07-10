@@ -35,8 +35,8 @@ class User(DB):
         user_id = self.cur.fetchone()
         return user_id
 
-            # obj = User(*user_id)
-            # return obj
+        # obj = User(*user_id)
+        # return obj
 
     def delete_account(self, account):
         query = f" delete from Users where email =  ? "
@@ -94,7 +94,7 @@ class Car(DB):
         if self.cur:
             return False
         query = """insert into Car (name, year, color, price, praberg) values (?, ?, ?, ?, ?)"""
-        self.cur.execute(query(name, year, color, price, praberg,))
+        self.cur.execute(query(name, year, color, price, praberg, ))
         return True
 
     def delete(self):

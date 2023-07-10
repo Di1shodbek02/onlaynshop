@@ -212,3 +212,98 @@
 #
 #
 # UI()
+
+
+
+
+
+
+
+
+
+
+
+def customer_menu(self):
+        # Display car campaigns
+        campaigns = CarCampaign().show()
+        print("Car Campaigns:")
+        print(tabulate(campaigns, headers="keys", tablefmt="grid"))
+
+        campaign_id = int(input("Select a car campaign by entering its ID: "))
+        cars = Car().show(campaign_id)
+
+        if cars:
+            # Display cars for the selected campaign
+            headers = ["ID", "Color", "Year", "Brand", "Speed", "Price"]
+            print("Cars:")
+            print(tabulate(cars, headers=headers, tablefmt="grid"))
+        else:
+            print("No cars found for the selected campaign.")
+
+Shaxrizoda kursdosh, [10/07/23 22:57]
+class CustomerUI(Basic):
+    def __init__(self, session):
+        super().__init__(session)
+
+    def customer_menu(self):
+        text = """
+                1) Choose car
+                2) <- back
+            """
+        key = int(input(text))
+        match key:
+            case 1:
+                CompanyUI(self.session_user).company_crud()
+            case 2:
+                CarUI(self.session_user).car_crud()
+            case 3:
+                self.settings()
+            case 4:
+                UI()
+
+
+
+class Car:
+    ...
+
+@classmethod
+def get_by_id(cls, id):
+    car = DB.session.query(cls).filter(cls.id == id).first()
+    return car
+
+
+class CustomerUI(Basic):
+    def __init__(self, session):
+        super().__init__(session)
+
+    def customer_menu(self):
+        text = """
+                1) Choose car
+                2) <- back
+            """
+        key = int(input(text))
+        # Use match statement to handle user input
+        match key:
+            case 1:
+                CompanyUI(self.session_user).company_crud()
+            case 2:
+                CarUI(self.session_user).car_crud()
+            case 3:
+                self.settings()
+            case 4:
+                UI()
+
+
+def customer_menu():
+    campaigns = CompanyUI().show()
+    print("Car Campaigns:")
+    print(tabulate(campaigns, headers="keys", tablefmt="grid"))
+    campaign_id = int(input("Select a car campaign by entering its ID: "))
+    cars = Car().show(campaign_id)
+    if cars:
+        # Display cars for the selected campaign
+        headers = ["ID", "Color", "Year", "Brand", "Speed", "Price"]
+        print("Cars:")
+        print(tabulate(cars, headers=headers, tablefmt="grid"))
+    else:
+        print("No cars found for the selected campaign.")
