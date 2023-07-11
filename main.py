@@ -28,15 +28,15 @@ class Basic:
                 key = int(input(menu_col))
                 if key != 4:
                     new_val = input("New value: ")
-                    match key:
-                        case 1:
-                            self.session = self.session.change_info('full_name', new_val)
-                        case 2:
-                            self.session = self.session.change_info('email', new_val)
-                        case 3:
-                            self.session = self.session.change_info('password', new_val)
-                        case 4:
-                            self.settings()
+                match key:
+                    case 1:
+                        self.session.change_info('full_name', new_val)
+                    case 2:
+                        self.session.change_info('email', new_val)
+                    case 3:
+                        self.session.change_info('password', new_val)
+                    case 4:
+                        self.settings()
                 self.settings()
 
             case 2:
@@ -62,11 +62,11 @@ class CustomerUI(Basic):
         # Use match statement to handle user input
         match key:
             case 1:
-                CompanyUI(self.session).company_crud()
+                pass
             case 2:
-                CarUI(self.session).car_crud()
+                pass
             case 3:
-                self.settings()
+                pass
             case 4:
                 UI()
 
@@ -96,9 +96,7 @@ class CarUI(Basic):
                     'year': int(input('Year: ')),
                     'color': input('Color: '),
                     'price': int(input('Price: ')),
-                    'praberg': int(input('Praberg: ')),
-                    'created_at': 'created_at'
-
+                    'praberg': int(input('Praberg: '))
                 }
                 data = Car(**d)
                 # data = data.cars(comp_id)

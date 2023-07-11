@@ -38,16 +38,16 @@ class User(DB):
         # obj = User(*user_id)
         # return obj
 
-    def delete_account(self, email, password):
+    def delete_account(self):
         query1 = """
             select * from Users where email = ? and password = ?
         """
-        param1 = (email, password)
+        param1 = (self.email, self.password)
         self.cur.execute(query1, param1)
 
-        if self.cur.fetchone():
+        if self.cur.fetchone:
             query2 = """delete from Users where email = ? and password = ?"""
-            param2 = (email, password)
+            param2 = (self.email, self.password,)
             self.cur.execute(query2, param2)
             self.con.commit()
             return True
@@ -70,19 +70,20 @@ class User(DB):
         self.cur.execute(query, params)
         self.con.commit()
 
-    def change_info(self, col_name, value):
-        query = f"""update Users set {col_name} = ? where id = ?"""
-        param = (value, self.id)
-        self.cur.execute(query, param)
-        self.con.commit()
-
-        query1 = """select * from Users where id = ?"""
-        param1 = (self.id,)
-        self.cur.execute(query1, param1)
-        response = self.cur.fetchone()
-        if response:
-            obj = User(*response)
-            return obj
+    def change_info(self, col_name, val):
+        query = f"""
+            update users set {col_name} = ? where id = ?
+        """
+        params = (val, self.id)
+        self.cur.execute(query, params)
+        # self.con.commit()
+        # query1 = """select * from Users where id = ?"""
+        # param1 = (self.id,)
+        # self.cur.execute(query1, param1)
+        # response = self.cur.fetchone()
+        # if response:
+        #     obj = User(*response)
+        #     return obj
 
 
 @dataclass
