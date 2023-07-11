@@ -38,11 +38,19 @@ class User(DB):
         # obj = User(*user_id)
         # return obj
 
-    def delete_account(self, account):
-        query = f" delete from Users where email =  ? "
-        param = (account,)  # noqa
-        self.cur.execute(query, param)
-        self.con.commit()
+    def delete_account(self, email, password):
+        query1 = """
+            select * from Users where email = ? and password = ?
+        """
+        param1 = (email, password)
+        self.cur.execute(query1, param1)
+
+        if self.cur.fetchone():
+            query2 = """delete from Users where email = ? and password = ?"""
+            param2 = (email, password)
+            self.cur.execute(query2, param2)
+            self.con.commit()
+            return True
 
     def change_name(self, new_name):  # noqa
         query = f" update Users set full_name = ? where email = ? "
@@ -62,19 +70,19 @@ class User(DB):
         self.cur.execute(query, params)
         self.con.commit()
 
-    def delete_account1(self):
-        query = f" delete from Users where email =  ? "
-        param = (self.email,)  # noqa
+    def change_info(self, col_name, value):
+        query = f"""update Users set {col_name} = ? where id = ?"""
+        param = (value, self.id)
         self.cur.execute(query, param)
         self.con.commit()
 
-    def change_info(self, col_name, val):
-        query = f"""
-            update Users set {col_name} = ? where id = ?
-            """
-        params = (val, self.id)
-        self.cur.execute(query, params)
-        self.con.commit()
+        query1 = """select * from Users where id = ?"""
+        param1 = (self.id,)
+        self.cur.execute(query1, param1)
+        response = self.cur.fetchone()
+        if response:
+            obj = User(*response)
+            return obj
 
 
 @dataclass
@@ -93,8 +101,10 @@ class Car(DB):
         # self.cur.execute(query, (self.name,))
         # if self.cur:
         #     return False
-        query = """insert into Car (company_id , name,year , color , price , praberg , created_at ) values (?,?,?,?,?,?,?)"""
-        self.cur.execute(query, (self.name, self.company_id, self.year, self.color, self.price, self.praberg, self.created_at ))
+
+        query = """insert into Car( name, company_id ,year , color , price , praberg , created_at ) values (?,?,?,?,?,?,?)"""
+        self.cur.execute(query,
+                         (self.name, self.company_id, self.year, self.color, self.price, self.praberg, self.created_at))
 
         return self.con.commit()
 
@@ -105,7 +115,7 @@ class Car(DB):
 
     def update(self):
         query = """update Car set name=? where id=?"""
-        self.cur.execute(query, (self.name, self.id, ))
+        self.cur.execute(query, (self.name, self.id,))
         self.con.commit()
 
     def show(self):

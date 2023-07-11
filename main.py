@@ -7,7 +7,7 @@ from model import Car
 
 class Basic:
     def __init__(self, session):
-        self.session_user = session
+        self.session = session
 
     def settings(self):
         menu = """
@@ -15,34 +15,36 @@ class Basic:
         2) delete account
         3) <- back
         """
+        print(self.session)
         key = int(input(menu))
         match key:
             case 1:
                 menu_col = """
-                    1) name
-                    2) username
+                    1) Full name
+                    2) Email
                     3) password
                     4) <- back
                         >>>"""
                 key = int(input(menu_col))
-                # if key != 4:
-                new_val = input("New value: ")
-                match key:
-                    case 1:
-                        self.session_user.change_info("full_name", new_val)
-                    case 2:
-                        self.session_user.change_info("email", new_val)
-                    case 3:
-                        self.session_user.change_info("password", new_val)
-                    case 4:
-                        self.settings()
+                if key != 4:
+                    new_val = input("New value: ")
+                    match key:
+                        case 1:
+                            self.session = self.session.change_info('full_name', new_val)
+                        case 2:
+                            self.session = self.session.change_info('email', new_val)
+                        case 3:
+                            self.session = self.session.change_info('password', new_val)
+                        case 4:
+                            self.settings()
                 self.settings()
 
             case 2:
-                if self.session_user.role == "ADMIN":
-                    AdminUI(self.session_user).admin_menu()
+                if not self.session.delete_account(input("email: "), input("password: ")):
+                    print("Invalid email or password")
                 else:
-                    CustomerUI(self.session_user).customer_menu()
+                    print("Your account successfully delete! ")
+                    return
 
 
 class CustomerUI(Basic):
@@ -60,9 +62,9 @@ class CustomerUI(Basic):
         # Use match statement to handle user input
         match key:
             case 1:
-                CompanyUI(self.session_user).company_crud()
+                CompanyUI(self.session).company_crud()
             case 2:
-                CarUI(self.session_user).car_crud()
+                CarUI(self.session).car_crud()
             case 3:
                 self.settings()
             case 4:
@@ -94,7 +96,8 @@ class CarUI(Basic):
                     'year': int(input('Year: ')),
                     'color': input('Color: '),
                     'price': int(input('Price: ')),
-                    'praberg': int(input('Praberg: '))
+                    'praberg': int(input('Praberg: ')),
+                    'created_at': 'created_at'
 
                 }
                 data = Car(**d)
@@ -123,12 +126,13 @@ class CarUI(Basic):
                 data = Car().show()
                 print(tabulate(data, tablefmt="simple_grid"))
                 d = {
-                    "id_key": int(input("Id: ")),
-                    "new_name": input("New name: ")
+                    "id": int(input("Id: ")),
+                    "name": input("New name: ")
                 }
                 Car(**d).update()
                 print("Success update!!")
             case 4:
+
                 comp_id = int(input("Select comp id: "))
                 data = Car()
                 data.cars(comp_id)
@@ -136,7 +140,7 @@ class CarUI(Basic):
                 print(tabulate(data, tablefmt="simple_grid"))
 
             case 5:
-                CompanyUI(self.session_user).company_crud()
+                CompanyUI(self.session).company_crud()
         self.car_crud()
 
 
@@ -171,8 +175,8 @@ class CompanyUI(Basic):
                 data = Company().show()
                 print(tabulate(data, tablefmt="simple_grid"))
                 d = {
-                    "id_key": int(input("Id: ")),
-                    "new_name": input("New name: ")
+                    "id": int(input("Id: ")),
+                    "company_name": input("New name: ")
                 }
                 Company(**d).update()
                 print("Success update!!")
@@ -180,7 +184,7 @@ class CompanyUI(Basic):
                 data = Company().show()
                 print(tabulate(data, tablefmt="simple_grid"))
             case 5:
-                AdminUI(self.session_user).admin_menu()
+                AdminUI(self.session).admin_menu()
         self.company_crud()
 
 
@@ -198,9 +202,9 @@ class AdminUI(Basic):
         key = int(input(text))
         match key:
             case 1:
-                CompanyUI(self.session_user).company_crud()
+                CompanyUI(self.session).company_crud()
             case 2:
-                CarUI(self.session_user).car_crud()
+                CarUI(self.session).car_crud()
             case 3:
                 self.settings()
             case 4:
@@ -227,18 +231,17 @@ def login():
         "password": input("Password:"),
     }
     obj = User(**d)
-    session_user = list(obj.login_check())
+    session = list(obj.login_check())
     new_post = d["password"]
     bytes_pass = new_post.encode('utf-8')
-    if_true = bcrypt.checkpw(bytes_pass, session_user[3])
+    if_true = bcrypt.checkpw(bytes_pass, session[3])
     if not if_true:
         print("Wrong email or password !")
         return
-    # print(f"Welcome {session_user.full_name}")
-    if session_user[4] == "ADMIN":
-        AdminUI(session_user).admin_menu()
+    if session[4] == "ADMIN":
+        AdminUI(session).admin_menu()
     else:
-        CustomerUI(session_user).customer_menu()
+        CustomerUI(session).customer_menu()
 
 
 def UI():

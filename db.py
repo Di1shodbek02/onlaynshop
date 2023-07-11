@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 @dataclass
 class DB:
-    con = sqlite3.connect("Shop.sqlite")
+    con = sqlite3.connect("shops.sqlite")
     cur = con.cursor()
 
     query_user = """
