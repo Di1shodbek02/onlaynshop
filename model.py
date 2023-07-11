@@ -88,14 +88,15 @@ class Car(DB):
     praberg: int = None  # noqa
     created_at: str = None
 
-    def add(self, name, year, color, price, praberg):
-        query = """select * from Car where name=?"""
-        self.cur.execute(query, (self.name,))
-        if self.cur:
-            return False
-        query = """insert into Car (name, year, color, price, praberg) values (?, ?, ?, ?, ?)"""
-        self.cur.execute(query(name, year, color, price, praberg, ))
-        return True
+    def add(self):
+        # query = """select * from Car where name=?"""
+        # self.cur.execute(query, (self.name,))
+        # if self.cur:
+        #     return False
+        query = """insert into Car (company_id , name,year , color , price , praberg , created_at ) values (?,?,?,?,?,?,?)"""
+        self.cur.execute(query, (self.name, self.company_id, self.year, self.color, self.price, self.praberg, self.created_at ))
+
+        return self.con.commit()
 
     def delete(self):
         query = """delete from Car where id=?"""
@@ -104,7 +105,7 @@ class Car(DB):
 
     def update(self):
         query = """update Car set name=? where id=?"""
-        self.cur.execute(query(self.name, self.id, ))
+        self.cur.execute(query, (self.name, self.id, ))
         self.con.commit()
 
     def show(self):

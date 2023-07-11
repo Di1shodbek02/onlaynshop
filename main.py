@@ -25,8 +25,8 @@ class Basic:
                     4) <- back
                         >>>"""
                 key = int(input(menu_col))
-                if key != 4:
-                    new_val = input("New value: ")
+                # if key != 4:
+                new_val = input("New value: ")
                 match key:
                     case 1:
                         self.session_user.change_info("full_name", new_val)
@@ -42,7 +42,7 @@ class Basic:
                 if self.session_user.role == "ADMIN":
                     AdminUI(self.session_user).admin_menu()
                 else:
-                    CustomerUI(self.session_user).customer_menu()  # ✅
+                    CustomerUI(self.session_user).customer_menu()
 
 
 class CustomerUI(Basic):
@@ -89,6 +89,7 @@ class CarUI(Basic):
             case 1:
                 comp_id = int(input("Select comp id:"))
                 d = {
+                    'company_id': comp_id,
                     'name': input("Name: "),
                     'year': int(input('Year: ')),
                     'color': input('Color: '),
@@ -97,11 +98,11 @@ class CarUI(Basic):
 
                 }
                 data = Car(**d)
-                data.cars(comp_id)
-                print(tabulate(data, tablefmt="simple_grid"))
-                name = input("Enter name of car: ")
-                response = Car(name=name).add()
-                if not response:
+                # data = data.cars(comp_id)
+                # print(tabulate(data, tablefmt="simple_grid"))
+                # name = input("Enter name of car: ")
+                response = data.add()
+                if response:
                     print("There is this car in our collection!!!")
                 else:
                     print("Success add!")
@@ -111,8 +112,8 @@ class CarUI(Basic):
                 data.cars(comp_id)
                 data = Car().show()
                 print(tabulate(data, tablefmt="simple_grid"))
-                Id_key = int(input("Id: "))
-                Car(id=Id_key).delete()
+                id_key = int(input("Id: "))
+                Car(id=id_key).delete()
                 print("Successfully delete!")
 
             case 3:
@@ -122,13 +123,13 @@ class CarUI(Basic):
                 data = Car().show()
                 print(tabulate(data, tablefmt="simple_grid"))
                 d = {
-                    "Id_key": int(input("Id: ")),
+                    "id_key": int(input("Id: ")),
                     "new_name": input("New name: ")
                 }
                 Car(**d).update()
                 print("Success update!!")
             case 4:
-                comp_id = int(input("Select comp id:"))
+                comp_id = int(input("Select comp id: "))
                 data = Car()
                 data.cars(comp_id)
                 data = Car().show()
@@ -163,14 +164,14 @@ class CompanyUI(Basic):
             case 2:
                 data = Company().show()
                 print(tabulate(data, tablefmt="simple_grid"))
-                Id_key = int(input("Id: "))
-                Company(id=Id_key).delete()
+                id_key = int(input("Id: "))
+                Company(id=id_key).delete()
                 print("Successfully delete!")
             case 3:
                 data = Company().show()
                 print(tabulate(data, tablefmt="simple_grid"))
                 d = {
-                    "Id_key": int(input("Id: ")),
+                    "id_key": int(input("Id: ")),
                     "new_name": input("New name: ")
                 }
                 Company(**d).update()
