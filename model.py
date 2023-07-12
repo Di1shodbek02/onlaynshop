@@ -33,7 +33,7 @@ class User(DB):
         parametrs = (self.email,)
         self.cur.execute(query, parametrs)
         user_id = self.cur.fetchone()
-        return user_id
+        return User(*user_id)
 
         # obj = User(*user_id)
         # return obj
@@ -119,9 +119,9 @@ class Car(DB):
         self.cur.execute(query, (self.name, self.id,))
         self.con.commit()
 
-    def show(self):
-        query = """select * from Car"""
-        self.cur.execute(query)
+    def show(self, company_id):
+        query = """select * from Car where company_id=?"""
+        self.cur.execute(query, (company_id,))
         return self.cur.fetchall()
 
     def cars(self, company_id):

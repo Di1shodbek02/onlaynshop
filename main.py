@@ -9,6 +9,7 @@ class Basic:
     def __init__(self, session):
         self.session = session
 
+
     def settings(self):
         menu = """
         1) change info
@@ -52,26 +53,7 @@ class CustomerUI(Basic):
     def __init__(self, session):
         super().__init__(session)
 
-    def customer_menu(self):
-            text = """
-                 1) Show Cars
-                 2) Add to Cart
-                 3) Checkout
-                 4) <- back
-                 >>>>   """
-            key = int(input(text))
-            match key
-                case 1:
-                self.cart.show_cart()
-            case 2:
-
-                self.add_to_cart()
-
-            elif key == 4:
-            self.checkout()
-
-        elif key == 5:
-        break
+    pass
 
 
 class CarUI(Basic):
@@ -232,14 +214,14 @@ def login():
         "password": input("Password:"),
     }
     obj = User(**d)
-    session = list(obj.login_check())
+    session = obj.login_check()
     new_post = d["password"]
     bytes_pass = new_post.encode('utf-8')
-    if_true = bcrypt.checkpw(bytes_pass, session[3])
+    if_true = bcrypt.checkpw(bytes_pass, session.password)
     if not if_true:
         print("Wrong email or password !")
         return
-    if session[4] == "ADMIN":
+    if session.role == "ADMIN":
         AdminUI(session).admin_menu()
     else:
         CustomerUI(session).customer_menu()
