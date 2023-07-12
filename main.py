@@ -9,7 +9,6 @@ class Basic:
     def __init__(self, session):
         self.session = session
 
-
     def settings(self):
         menu = """
         1) change info
@@ -53,7 +52,24 @@ class CustomerUI(Basic):
     def __init__(self, session):
         super().__init__(session)
 
-    pass
+    def customer_menu(self):
+        text = """
+            1) Company
+            2) Car
+            3) settings
+            4) <- back
+            >>>>  """
+        key = int(input(text))
+        match key:
+            case 1:
+                pass
+            case 2:
+                pass
+            case 3:
+                self.settings()
+            case 4:
+                UI()
+
 
 
 class CarUI(Basic):
