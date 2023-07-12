@@ -167,3 +167,52 @@ def query_company():
 #     if model.company_name():
 #         print(" The account already exists !")
 #     return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def __init__(self, user_data, company_name):
+        self.user_data = user_data
+        self.cart = CarUI(user_data[0])
+        self.session = DB()
+        self.cart = None
+        self.company_name = company_name
+
+    def show_cars(self):
+        query = "SELECT id FROM Company WHERE company_name = ?"
+        self.cur.execute(query, (self.company_name,))
+        company_id = self.cur.fetchone()
+        if not company_id:
+            print(f"{self.company_name}  No company found.")
+            return
+        company = Company(*company_id)
+
+        query = "SELECT * FROM Car WHERE company_id = ?"
+        self.cur.execute(query, (company.id,))
+        cars = self.cur.fetchall()
+        if not cars:
+            print(f"{company.company_name}  The company has no agents..")
+            return
+        for car in cars:
+            car = Car(*car)
+            print(f" Rusumi: {car.name} | years: {car.year} |  Price: {car.price}")

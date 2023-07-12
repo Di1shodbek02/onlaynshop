@@ -48,27 +48,30 @@ class Basic:
 
 
 class CustomerUI(Basic):
+
     def __init__(self, session):
         super().__init__(session)
 
     def customer_menu(self):
-        text = """
-                1) Company 
-                2) Car
-                3) settings
-                4) <-back
-            """
-        key = int(input(text))
-        # Use match statement to handle user input
-        match key:
-            case 1:
-                pass
+            text = """
+                 1) Show Cars
+                 2) Add to Cart
+                 3) Checkout
+                 4) <- back
+                 >>>>   """
+            key = int(input(text))
+            match key
+                case 1:
+                self.cart.show_cart()
             case 2:
-                pass
-            case 3:
-                pass
-            case 4:
-                UI()
+
+                self.add_to_cart()
+
+            elif key == 4:
+            self.checkout()
+
+        elif key == 5:
+        break
 
 
 class CarUI(Basic):
