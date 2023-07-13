@@ -39,7 +39,17 @@ class DB:
         );
     """
 
+    query_customer = """
+        create table if not exists Customer(
+        id integer primary key autoincrement,
+        
+        Company_id integer not null,
+        Car_id integer not null
+        );
+    """
+
     cur.execute(query_user)
     cur.execute(query_company)
     cur.execute(query_car)
+    cur.execute(query_customer)
     con.commit()

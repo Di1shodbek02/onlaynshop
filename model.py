@@ -133,6 +133,7 @@ class Car(DB):
         return data
 
 
+
 @dataclass
 class Company(DB):
     id: int = None
@@ -163,3 +164,8 @@ class Company(DB):
         query = """ select * from Company"""
         self.cur.execute(query)
         return self.cur.fetchall()
+
+
+@dataclass
+class Customer(DB):
+    pass
